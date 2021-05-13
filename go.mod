@@ -1,4 +1,4 @@
-module yijing-common
+module git.changjing.com.cn/yijing-common
 
 go 1.16
 
