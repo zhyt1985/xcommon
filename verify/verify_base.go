@@ -6,13 +6,17 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // 小于
 func Lt(paramList []string, v interface{}) bool {
 	value := v.(reflect.Value)
 	switch value.Kind() {
-	case reflect.String, reflect.Slice, reflect.Array:
+	case reflect.String:
+		p, _ := strconv.ParseInt(paramList[0], 0, 64)
+		return int64(utf8.RuneCountInString(value.String())) < p
+	case reflect.Map, reflect.Slice, reflect.Array:
 		return compare(value.Len(), "lt="+paramList[0])
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
 		return compare(value.Uint(), "lt="+paramList[0])
@@ -29,7 +33,10 @@ func Lt(paramList []string, v interface{}) bool {
 func Le(paramList []string, v interface{}) bool {
 	value := v.(reflect.Value)
 	switch value.Kind() {
-	case reflect.String, reflect.Slice, reflect.Array:
+	case reflect.String:
+		p, _ := strconv.ParseInt(paramList[0], 0, 64)
+		return int64(utf8.RuneCountInString(value.String())) <= p
+	case reflect.Map, reflect.Slice, reflect.Array:
 		return compare(value.Len(), "le="+paramList[0])
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
 		return compare(value.Uint(), "le="+paramList[0])
@@ -46,7 +53,10 @@ func Le(paramList []string, v interface{}) bool {
 func Eq(paramList []string, v interface{}) bool {
 	value := v.(reflect.Value)
 	switch value.Kind() {
-	case reflect.String, reflect.Slice, reflect.Array:
+	case reflect.String:
+		p, _ := strconv.ParseInt(paramList[0], 0, 64)
+		return int64(utf8.RuneCountInString(value.String())) == p
+	case reflect.Map, reflect.Slice, reflect.Array:
 		return compare(value.Len(), "eq="+paramList[0])
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
 		return compare(value.Uint(), "eq="+paramList[0])
@@ -63,7 +73,10 @@ func Eq(paramList []string, v interface{}) bool {
 func Ne(paramList []string, v interface{}) bool {
 	value := v.(reflect.Value)
 	switch value.Kind() {
-	case reflect.String, reflect.Slice, reflect.Array:
+	case reflect.String:
+		p, _ := strconv.ParseInt(paramList[0], 0, 64)
+		return int64(utf8.RuneCountInString(value.String())) != p
+	case reflect.Map, reflect.Slice, reflect.Array:
 		return compare(value.Len(), "ne="+paramList[0])
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
 		return compare(value.Uint(), "ne="+paramList[0])
@@ -80,7 +93,10 @@ func Ne(paramList []string, v interface{}) bool {
 func Ge(paramList []string, v interface{}) bool {
 	value := v.(reflect.Value)
 	switch value.Kind() {
-	case reflect.String, reflect.Slice, reflect.Array:
+	case reflect.String:
+		p, _ := strconv.ParseInt(paramList[0], 0, 64)
+		return int64(utf8.RuneCountInString(value.String())) >= p
+	case reflect.Map, reflect.Slice, reflect.Array:
 		return compare(value.Len(), "ge="+paramList[0])
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
 		return compare(value.Uint(), "ge="+paramList[0])
@@ -97,7 +113,10 @@ func Ge(paramList []string, v interface{}) bool {
 func Gt(paramList []string, v interface{}) bool {
 	value := v.(reflect.Value)
 	switch value.Kind() {
-	case reflect.String, reflect.Slice, reflect.Array:
+	case reflect.String:
+		p, _ := strconv.ParseInt(paramList[0], 0, 64)
+		return int64(utf8.RuneCountInString(value.String())) > p
+	case reflect.Map, reflect.Slice, reflect.Array:
 		return compare(value.Len(), "gt="+paramList[0])
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
 		return compare(value.Uint(), "gt="+paramList[0])
