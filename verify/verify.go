@@ -3,6 +3,7 @@ package verify
 import (
 	"errors"
 	"fmt"
+	"log"
 	"reflect"
 	"strings"
 )
@@ -23,6 +24,10 @@ func parse(inType reflect.Type, inValue reflect.Value) (err error) {
 
 func pStruct(t reflect.Type, v reflect.Value) (err error) {
 	// 获取struct类型中字段的数量
+	if reflect.ValueOf(v).IsZero() {
+		log.Println("结构体中包含不可读的结构体(所有成员为小写)")
+		return nil
+	}
 	for i := 0; i < v.NumField(); i++ {
 		fieldInfo := v.Type().Field(i)
 		tag := fieldInfo.Tag
@@ -71,7 +76,9 @@ func ptr(inType reflect.Type, value reflect.Value) (err error) {
 	if value.IsNil() {
 		nv := reflect.New(ele)
 		err = parse(ele, value.Elem())
-		value.Set(nv)
+		if value.CanSet() {
+			value.Set(nv)
+		}
 	} else {
 		err = parse(ele, value.Elem())
 	}

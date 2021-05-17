@@ -4,6 +4,7 @@ import (
 	"reflect"
 	"regexp"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -64,15 +65,19 @@ func init() {
 }
 
 type Student struct {
-	Name       string   `verify:"notEmpty"`
-	Age        int      `verify:"gt(5),le(8)"`
-	Class      string   `verify:"eq(7)"`
+	Name string `verify:"notEmpty"`
+	Age  int    `verify:"gt(5),le(8)"`
+	Class
 	CreateTime string   `verify:"date(2006-01-02|2006/01/02)"`
 	UpdateTime string   `verify:"date(2006-01-02|2006/01/02)"`
 	Book       []string `verify:"gt(0)"`
 	Password   string   `verify:"password"`
 	Mobile     string   `verify:"mobile"`
 	Email      string   `verify:"email"`
+}
+type Class struct {
+	Name       string `verify:"eq(7)"`
+	CreateTime time.Time
 }
 
 func TestVerify(t *testing.T) {
@@ -82,10 +87,13 @@ func TestVerify(t *testing.T) {
 		Description: "邮箱格式不正确",
 		Call:        email,
 	})
+	class := Class{
+		Name: "班级名称123",
+	}
 	err := Verify(Student{
 		Name:       "name",
 		Age:        8,
-		Class:      "testnam",
+		Class:      class,
 		CreateTime: "2018/05/05",
 		UpdateTime: "2018-05-05",
 		Book:       []string{"book"},
