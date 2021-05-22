@@ -164,7 +164,8 @@ func NotEmpty(v interface{}) bool {
 	value := v.(reflect.Value)
 	switch value.Kind() {
 	case reflect.String:
-		return value.Len() != 0
+		s := strings.Replace(value.String(), " ", "", -1)
+		return len(s) != 0
 	case reflect.Bool:
 		return !value.Bool()
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:

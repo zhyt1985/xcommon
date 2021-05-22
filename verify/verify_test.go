@@ -1,12 +1,10 @@
 package verify
 
 import (
+	"github.com/stretchr/testify/assert"
 	"reflect"
 	"regexp"
 	"testing"
-	"time"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func init() {
@@ -65,9 +63,8 @@ func init() {
 }
 
 type Student struct {
-	Name string `verify:"notEmpty"`
-	Age  int    `verify:"gt(5),le(8)"`
-	Class
+	Name       string   `verify:"notEmpty"`
+	Age        int      `verify:"gt(5),le(8)"`
 	CreateTime string   `verify:"date(2006-01-02|2006/01/02)"`
 	UpdateTime string   `verify:"date(2006-01-02|2006/01/02)"`
 	Book       []string `verify:"gt(0)"`
@@ -76,8 +73,11 @@ type Student struct {
 	Email      string   `verify:"email"`
 }
 type Class struct {
-	Name       string `verify:"eq(7)"`
-	CreateTime time.Time
+	ClassInfo
+}
+type ClassInfo struct {
+	ClassName string `verify:"ge(5)"`
+	ClassNo   int    `verify:"ge(5)"`
 }
 
 func TestVerify(t *testing.T) {
@@ -87,19 +87,25 @@ func TestVerify(t *testing.T) {
 		Description: "邮箱格式不正确",
 		Call:        email,
 	})
-	class := Class{
-		Name: "班级名称123",
-	}
 	err := Verify(Student{
-		Name:       "name",
+		Name:       "s ",
 		Age:        8,
-		Class:      class,
 		CreateTime: "2018/05/05",
 		UpdateTime: "2018-05-05",
 		Book:       []string{"book"},
-		Password:   "pasab145",
+		Password:   "pa145abdd",
 		Mobile:     "18010058148",
 		Email:      "597410004@qq.com",
+	})
+	assert.NoError(err)
+}
+func TestVerifyStruct(t *testing.T) {
+	assert := assert.New(t)
+	err := Verify(Class{
+		ClassInfo{
+			ClassName: "三年二班",
+			ClassNo:   9,
+		},
 	})
 	assert.NoError(err)
 }
