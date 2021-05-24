@@ -43,7 +43,7 @@ func pStruct(t reflect.Type, v reflect.Value) {
 					v.FieldByName(fieldInfo.Name).SetFloat(paramType.Float())
 				case reflect.String:
 					v.FieldByName(fieldInfo.Name).SetString(defaultTag)
-				case reflect.Int64:
+				case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 					defaultInt, _ := strconv.Atoi(defaultTag)
 					v.FieldByName(fieldInfo.Name).SetInt(int64(defaultInt))
 				}

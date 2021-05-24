@@ -13,6 +13,9 @@ type Number struct {
 	Percent  float64 `fake:"func(RandFloatRangeRand(4))"`
 	Code     string  `fake:"func(RandEnum(110000|120000|130000|150000|170000))"`
 }
+type Default struct {
+	Count int `default:"1"`
+}
 
 func init() {
 	Seed(0)
@@ -46,6 +49,13 @@ func init() {
 func TestFake(t *testing.T) {
 	assert := assert.New(t)
 	order := Number{}
+	Fake(&order)
+	fmt.Println(order)
+	assert.NotNil(order.Count)
+}
+func TestDefault(t *testing.T) {
+	assert := assert.New(t)
+	order := Default{}
 	Fake(&order)
 	fmt.Println(order)
 	assert.NotNil(order.Count)
