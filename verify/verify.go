@@ -33,39 +33,61 @@ func pStruct(t reflect.Type, v reflect.Value) (err error) {
 		tag := fieldInfo.Tag
 		structName := fieldInfo.Name
 		if verifyTag, ok := tag.Lookup("verify"); ok {
-			verifyTags := strings.Split(verifyTag, ",")
-			for _, verifyTag := range verifyTags {
-				var tagFuncName string
-				var paramList []string
-				index := strings.Index(verifyTag, "(")
-				// 没有参数
-				if index == -1 {
-					tagFuncName = verifyTag
-				} else {
-					tagFuncName = verifyTag[0:index]
-					param := verifyTag[index+1 : strings.Index(verifyTag, ")")]
-					paramList = strings.Split(param, ",")
+			var msg string
+			tags := strings.Split(verifyTag, ";")
+			haveMsg := func() bool {
+				for _, tag := range tags {
+					tagKey := strings.Split(tag, ":")[0]
+					if tagKey == "msg" {
+						msg = strings.Split(tag, ":")[1]
+						return true
+					}
 				}
-				if info := GetVerify(tagFuncName); info != nil {
-					value := v.Field(i)
-					var valid bool
-					if len(paramList) == 0 {
-						valid = info.Call(value)
-					} else {
-						valid = info.CallParam(paramList, value)
+				return false
+			}
+			for _, tag := range tags {
+				tagKey := strings.Split(tag, ":")[0]
+				if tagKey == "field" {
+					verifyTags := strings.Split(strings.Split(tag, ":")[1], ",")
+					for _, verifyTag := range verifyTags {
+						var (
+							tagFuncName string
+							paramList   []string
+						)
+						index := strings.Index(verifyTag, "(")
+						// 没有参数
+						if index == -1 {
+							tagFuncName = verifyTag
+						} else {
+							tagFuncName = verifyTag[0:index]
+							param := verifyTag[index+1 : strings.Index(verifyTag, ")")]
+							paramList = strings.Split(param, ",")
+						}
+						if info := GetVerify(tagFuncName); info != nil {
+							value := v.Field(i)
+							var valid bool
+							if len(paramList) == 0 {
+								valid = info.Call(value)
+							} else {
+								valid = info.CallParam(paramList, value)
+							}
+							if !valid {
+								if !haveMsg() {
+									msg = fmt.Sprintf("[%s] 参数认证失败，错误信息：%s", structName, info.Description)
+								}
+								err = errors.New(msg)
+								return
+							}
+						} else {
+							funcNotFoundMsg := fmt.Sprintf("[%s] 参数认证失败，错误信息：{%s} %s", structName,
+								tagFuncName, "认证方式未注册")
+							err = errors.New(funcNotFoundMsg)
+							return
+						}
 					}
-					if !valid {
-						paramMsg := fmt.Sprintf("[%s] 参数认证失败，错误信息：%s", structName, info.Description)
-						err = errors.New(paramMsg)
-						return
-					}
-				} else {
-					funcNotFoundMsg := fmt.Sprintf("[%s] 参数认证失败，错误信息：{%s} %s", structName,
-						tagFuncName, "认证方式未注册")
-					err = errors.New(funcNotFoundMsg)
-					return
 				}
 			}
+
 		}
 		err = parse(t.Field(i).Type, v.Field(i))
 	}

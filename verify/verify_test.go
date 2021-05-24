@@ -63,21 +63,19 @@ func init() {
 }
 
 type Student struct {
-	Name       string   `verify:"notEmpty"`
-	Age        int      `verify:"gt(5),le(8)"`
-	CreateTime string   `verify:"date(2006-01-02|2006/01/02)"`
-	UpdateTime string   `verify:"date(2006-01-02|2006/01/02)"`
-	Book       []string `verify:"gt(0)"`
-	Password   string   `verify:"password"`
-	Mobile     string   `verify:"mobile"`
-	Email      string   `verify:"email"`
-}
-type Class struct {
-	ClassInfo
+	Name       string   `verify:"field:notEmpty"`
+	Age        int      `verify:"field:gt(5),le(8);msg:年龄不在规定范围之内"`
+	CreateTime string   `verify:"field:date(2006-01-02|2006/01/02)"`
+	UpdateTime string   `verify:"field:date(2006-01-02|2006/01/02)"`
+	Book       []string `verify:"field:gt(0)"`
+	Password   string   `verify:"field:password"`
+	Mobile     string   `verify:"field:mobile"`
+	Email      string   `verify:"field:email"`
+	Class      ClassInfo
 }
 type ClassInfo struct {
-	ClassName string `verify:"ge(5)"`
-	ClassNo   int    `verify:"ge(5)"`
+	ClassName string `verify:"field:ge(5)"`
+	ClassNo   int    `verify:"field:ge(5)"`
 }
 
 func TestVerify(t *testing.T) {
@@ -96,14 +94,8 @@ func TestVerify(t *testing.T) {
 		Password:   "pa145abdd",
 		Mobile:     "18010058148",
 		Email:      "597410004@qq.com",
-	})
-	assert.NoError(err)
-}
-func TestVerifyStruct(t *testing.T) {
-	assert := assert.New(t)
-	err := Verify(Class{
-		ClassInfo{
-			ClassName: "三年二班",
+		Class: ClassInfo{
+			ClassName: "三年二班小猥琐",
 			ClassNo:   9,
 		},
 	})
