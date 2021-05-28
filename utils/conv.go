@@ -253,6 +253,8 @@ func FormatFloatDigit(data interface{}, digit int) (string, error) {
 		value, err = GetFloat64(data)
 	case int:
 		value, err = GetFloat64(data)
+	default:
+		err = errors.New("type not support")
 	}
 	if err != nil {
 		return "", err
@@ -266,20 +268,17 @@ func FormatFloatDigit(data interface{}, digit int) (string, error) {
   参数说明：value1 乘数，value2 被乘数
   out: 返回string是防止出现精确度丢失的问题
 */
-func Mul(value1 interface{}, value2 interface{}) (string, error) {
-	var v1, v2 decimal.Decimal
+func Mul(value1, value2 interface{}) (string, error) {
 	// 转成float64
-	kv1, err := GetFloat64(value1)
+	v1, err := GetFloat64(value1)
 	if err != nil {
 		return "", err
 	}
-	kv2, err := GetFloat64(value2)
+	v2, err := GetFloat64(value2)
 	if err != nil {
 		return "", err
 	}
-	v1 = decimal.NewFromFloat(kv1)
-	v2 = decimal.NewFromFloat(kv2)
-	return v1.Mul(v2).String(), nil
+	return decimal.NewFromFloat(v1).Mul(decimal.NewFromFloat(v2)).String(), nil
 }
 
 /*
@@ -287,41 +286,18 @@ func Mul(value1 interface{}, value2 interface{}) (string, error) {
   参数说明：value1 分子，value2 分母
   out: 返回string是防止出现精确度丢失的问题
 */
-func Div(value1 float64, value2 interface{}) (string, error) {
-	var v1, v2 decimal.Decimal
+func Div(value1, value2 interface{}) (string, error) {
 	// 转成float64
-	kv1, err := GetFloat64(value1)
+	v1, err := GetFloat64(value1)
 	if err != nil {
 		return "", err
 	}
-	kv2, err := GetFloat64(value2)
+	v2, err := GetFloat64(value2)
 	if err != nil {
 		return "", err
 	}
-	if kv2 == 0 {
+	if v2 == 0 {
 		return "", errors.New("分母不能为0")
 	}
-	v1 = decimal.NewFromFloat(kv1)
-	v2 = decimal.NewFromFloat(kv2)
-	return v1.Div(v2).String(), nil
-}
-
-/*
-  加法
-  out: 返回string是防止出现精确度丢失的问题
-*/
-func Add(value1, value2 interface{}) (string, error) {
-	var v1, v2 decimal.Decimal
-	// 转成float64
-	kv1, err := GetFloat64(value1)
-	if err != nil {
-		return "", err
-	}
-	kv2, err := GetFloat64(value2)
-	if err != nil {
-		return "", err
-	}
-	v1 = decimal.NewFromFloat(kv1)
-	v2 = decimal.NewFromFloat(kv2)
-	return v1.Add(v2).String(), nil
+	return decimal.NewFromFloat(v1).Div(decimal.NewFromFloat(v2)).String(), nil
 }
