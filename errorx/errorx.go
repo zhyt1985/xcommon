@@ -16,7 +16,7 @@ func DescodeRpcErr(e error) ErrorInfo {
 		msg = se.Proto().Message
 		code, _ = utils.GetInt(se.Proto().Code)
 	}
-	return NewErrorInfo(code, msg)
+	return NewError(code, msg)
 }
 
 // NewRpcError 初始化rpc错误
@@ -49,8 +49,8 @@ func (e *CodeError) Msg() string {
 	return e.ErrMsg
 }
 
-// NewErrorInfo 返回新定义的error接口
-func NewErrorInfo(code int, msg string) ErrorInfo {
+// NewError 返回新定义的error接口
+func NewError(code int, msg string) ErrorInfo {
 	return &CodeError{code, msg}
 }
 
