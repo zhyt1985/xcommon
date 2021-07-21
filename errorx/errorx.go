@@ -53,3 +53,15 @@ func (e *codeError) Msg() string {
 func NewErrorInfo(code int, msg string) ErrorInfo {
 	return &codeError{code, msg}
 }
+
+type CodeErrorResponse struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+}
+
+func (e *codeError) Data() *CodeErrorResponse {
+	return &CodeErrorResponse{
+		Code: e.Code(),
+		Msg:  e.Msg(),
+	}
+}
