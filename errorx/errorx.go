@@ -31,8 +31,8 @@ type ErrorInfo interface {
 }
 
 type CodeError struct {
-	ErrCode int    `json:"code"`
-	ErrMsg  string `json:"msg"`
+	ErrCode int
+	ErrMsg  string
 }
 
 func (e *CodeError) Error() string {
@@ -52,16 +52,4 @@ func (e *CodeError) Msg() string {
 // NewError 返回新定义的error接口
 func NewError(code int, msg string) ErrorInfo {
 	return &CodeError{code, msg}
-}
-
-type CodeErrorResponse struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
-}
-
-func (e *CodeError) Data() *CodeErrorResponse {
-	return &CodeErrorResponse{
-		Code: e.Code(),
-		Msg:  e.Msg(),
-	}
 }
