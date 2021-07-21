@@ -6,8 +6,8 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// ErrorInfo 接口
-func DescodeErr(e error) error {
+// DescodeRpcErr 解码
+func DescodeRpcErr(e error) error {
 	var (
 		code int = -1
 		msg  string
@@ -27,6 +27,7 @@ func NewRpcError(code int, msg string) error {
 type ErrorInfo interface {
 	error
 	Code() int
+	Msg() string
 }
 
 type codeError struct {
@@ -43,8 +44,14 @@ func (e *codeError) Error() string {
 	return e.ErrMsg
 }
 
+// Code 错误编码
 func (e *codeError) Code() int {
 	return e.ErrCode
+}
+
+// 错误消息
+func (e *codeError) Msg() int {
+	return e.Msg()
 }
 
 // NewError 返回原有error接口
