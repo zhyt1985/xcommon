@@ -7,7 +7,7 @@ import (
 )
 
 // DescodeRpcErr 解码
-func DescodeRpcErr(e error) error {
+func DescodeRpcErr(e error) ErrorInfo {
 	var (
 		code int = -1
 		msg  string
@@ -16,7 +16,7 @@ func DescodeRpcErr(e error) error {
 		msg = se.Proto().Message
 		code, _ = utils.GetInt(se.Proto().Code)
 	}
-	return NewError(code, msg)
+	return NewErrorInfo(code, msg)
 }
 
 // NewRpcError 初始化rpc错误
@@ -35,11 +35,6 @@ type codeError struct {
 	ErrMsg  string `json:"msg"`
 }
 
-type CodeErrorResponse struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
-}
-
 func (e *codeError) Error() string {
 	return e.ErrMsg
 }
@@ -50,18 +45,11 @@ func (e *codeError) Code() int {
 }
 
 // 错误消息
-func (e *codeError) Msg() int {
-	return e.Msg()
-}
-
-// NewError 返回原有error接口
-// 使用go-zero
-func NewError(code int, msg string) error {
-	return &codeError{code, msg}
+func (e *codeError) Msg() string {
+	return e.ErrMsg
 }
 
 // NewErrorInfo 返回新定义的error接口
-// 使用普通项目框架
 func NewErrorInfo(code int, msg string) ErrorInfo {
 	return &codeError{code, msg}
 }
