@@ -6,8 +6,8 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// ErrorInfo 接口
-func DescodeErr(e error) error {
+// DescodeRpcErr 解码
+func DescodeRpcErr(e error) ErrorInfo {
 	var (
 		code int = -1
 		msg  string
@@ -16,7 +16,7 @@ func DescodeErr(e error) error {
 		msg = se.Proto().Message
 		code, _ = utils.GetInt(se.Proto().Code)
 	}
-	return NewError(code, msg)
+	return NewErrorInfo(code, msg)
 }
 
 // NewRpcError 初始化rpc错误
@@ -27,6 +27,7 @@ func NewRpcError(code int, msg string) error {
 type ErrorInfo interface {
 	error
 	Code() int
+	Msg() string
 }
 
 type codeError struct {
@@ -34,27 +35,21 @@ type codeError struct {
 	ErrMsg  string `json:"msg"`
 }
 
-type CodeErrorResponse struct {
-	Code int    `json:"code"`
-	Msg  string `json:"msg"`
-}
-
 func (e *codeError) Error() string {
 	return e.ErrMsg
 }
 
+// Code 错误编码
 func (e *codeError) Code() int {
 	return e.ErrCode
 }
 
-// NewError 返回原有error接口
-// 使用go-zero
-func NewError(code int, msg string) error {
-	return &codeError{code, msg}
+// 错误消息
+func (e *codeError) Msg() string {
+	return e.ErrMsg
 }
 
 // NewErrorInfo 返回新定义的error接口
-// 使用普通项目框架
 func NewErrorInfo(code int, msg string) ErrorInfo {
 	return &codeError{code, msg}
 }
