@@ -11,7 +11,7 @@ const (
 	defaultMultipartMemory = 32 << 20 // 32 MB
 )
 
-func FromFile(r *http.Request, name, path string) (*multipart.FileHeader, error) {
+func FileUpload(r *http.Request, name, path string) (*multipart.FileHeader, error) {
 	if r.MultipartForm == nil {
 		if err := r.ParseMultipartForm(defaultMultipartMemory); err != nil {
 			return nil, err
