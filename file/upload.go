@@ -24,7 +24,7 @@ func FileUpload(r *http.Request, name, path string) (*multipart.FileHeader, erro
 		return nil, err
 	}
 	defer file.Close()
-	newFile, err := os.Create(path + "/" + fh.Filename)
+	newFile, err := os.OpenFile(path+"/"+fh.Filename, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
 		return nil, err
 	}
