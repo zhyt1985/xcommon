@@ -13,12 +13,13 @@ const (
 	defaultMultipartMemory = 32 << 20 // 32 MB
 )
 
-type FileHeader struct {
+// 文件元信息
+type FileStat struct {
 	Stat *multipart.FileHeader
 	Path string
 }
 
-func FileUpload(r *http.Request, name, path string) (*FileHeader, error) {
+func FileUpload(r *http.Request, name, path string) (*FileStat, error) {
 	var (
 		filePath string
 	)
@@ -56,7 +57,7 @@ func FileUpload(r *http.Request, name, path string) (*FileHeader, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &FileHeader{
+	return &FileStat{
 		Stat: fh,
 		Path: filePath,
 	}, err
