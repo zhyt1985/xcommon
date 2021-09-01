@@ -43,7 +43,7 @@ func FileUpload(r *http.Request, name, path string) (*FileStat, error) {
 	}
 	// 判断文件夹是否存在，如果不存在，则创建
 	if has := isExists(path); !has {
-		err = os.Mkdir(path, os.ModePerm)
+		err = os.MkdirAll(path, os.ModePerm)
 		if err != nil {
 			return nil, err
 		}
