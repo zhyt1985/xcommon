@@ -29,6 +29,10 @@ func GetString(v interface{}) string {
 		value = result
 	case []byte:
 		value = string(result)
+	case float64:
+		value = decimal.NewFromFloat(result).String()
+	case float32:
+		value = decimal.NewFromFloat32(result).String()
 	default:
 		if v != nil {
 			value = fmt.Sprintf("%v", result)
