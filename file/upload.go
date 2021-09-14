@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	defaultMultipartMemory = 32 << 20 // 32 MB
+	defaultMultipartMemory = 100 << 20 // 32 MB
 )
 
 // 文件元信息
