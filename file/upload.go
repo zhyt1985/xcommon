@@ -19,6 +19,9 @@ type FileStat struct {
 	Path string
 }
 
+/*
+* FileUpload 上传单个文件
+ */
 func FileUpload(r *http.Request, name, path string) (*FileStat, error) {
 	var (
 		filePath string
@@ -61,6 +64,62 @@ func FileUpload(r *http.Request, name, path string) (*FileStat, error) {
 		Stat: fh,
 		Path: filePath,
 	}, err
+}
+
+/*
+* 上传多个文件
+ */
+func FileUploads(r *http.Request, name, path string) ([]*FileStat, error) {
+	var (
+		err  error
+		data []*FileStat
+	)
+	if r.MultipartForm == nil {
+		if err := r.ParseMultipartForm(defaultMultipartMemory); err != nil {
+			return nil, err
+		}
+	}
+	if path == "" {
+		return nil, errors.New("path not is empty")
+	}
+	// 判断文件夹是否存在，如果不存在，则创建
+	if has := isExists(path); !has {
+		err = os.MkdirAll(path, os.ModePerm)
+		if err != nil {
+			return nil, err
+		}
+	}
+	files := r.MultipartForm.File[name]
+	for i := 0; i < len(files); i++ {
+		var (
+			filePath string
+		)
+		fh := files[i]
+		file, err := files[i].Open()
+		if err != nil {
+			return nil, err
+		}
+		defer file.Close()
+		if path[len(path)-1] == '/' {
+			filePath = path + fh.Filename
+		} else {
+			filePath = path + "/" + fh.Filename
+		}
+		newFile, err := os.Create(filePath)
+		if err != nil {
+			return nil, err
+		}
+		defer newFile.Close()
+		_, err = io.Copy(newFile, file)
+		if err != nil {
+			return nil, err
+		}
+		data = append(data, &FileStat{
+			Stat: fh,
+			Path: filePath,
+		})
+	}
+	return data, err
 }
 
 // 文件下载
