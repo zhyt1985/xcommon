@@ -1,6 +1,7 @@
 package validatorx
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 
@@ -30,7 +31,7 @@ func init() {
 		fmt.Println(err)
 	}
 }
-func Struct(v interface{}) string {
+func Struct(v interface{}) error {
 	var (
 		msg string
 	)
@@ -41,5 +42,8 @@ func Struct(v interface{}) string {
 			break
 		}
 	}
-	return msg
+	if msg == "" {
+		return nil
+	}
+	return errors.New(msg)
 }
