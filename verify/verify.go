@@ -106,3 +106,58 @@ func ptr(inType reflect.Type, value reflect.Value) (err error) {
 	}
 	return
 }
+
+func init() {
+	RegisterVerifies([]Func{
+		{
+			Name:        "lt",
+			Description: "长度或值不在合法范围",
+			CallParam:   Lt,
+		},
+		{
+			Name:        "gt",
+			Description: "长度或值不在合法范围",
+			CallParam:   Gt,
+		},
+		{
+			Name:        "ge",
+			Description: "长度或值不在合法范围",
+			CallParam:   Ge,
+		},
+		{
+			Name:        "le",
+			Description: "长度或值不在合法范围",
+			CallParam:   Le,
+		},
+		{
+			Name:        "eq",
+			Description: "长度或值不在合法范围",
+			CallParam:   Eq,
+		},
+		{
+			Name:        "ne",
+			Description: "长度或值不在合法范围",
+			CallParam:   Ne,
+		},
+		{
+			Name:        "password",
+			Description: "密码格式不正确",
+			Call:        IsPassword,
+		},
+		{
+			Name:        "mobile",
+			Description: "手机号码格式认证失败",
+			Call:        IsMobilePhone,
+		},
+		{
+			Name:        "notEmpty",
+			Description: "字段不能为空",
+			Call:        NotEmpty,
+		},
+		{
+			Name:        "date",
+			Description: "日期格式不准确",
+			CallParam:   IsDateType,
+		},
+	})
+}
