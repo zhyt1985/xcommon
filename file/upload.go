@@ -51,10 +51,6 @@ func FileUpload(r *http.Request, name, path string) (*FileStat, error) {
 			return nil, err
 		}
 	}
-	//判断文件是否存在，如果存在，提示文件已存在
-	if has := isExists(filePath); has {
-		return nil, errors.New("文件名已存在，请更换文件名")
-	}
 	newFile, err := os.Create(filePath)
 	if err != nil {
 		return nil, err
