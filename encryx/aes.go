@@ -7,12 +7,14 @@ import (
 )
 
 type Aes struct {
-	Key string //密钥
+	Key []byte //密钥
+	Iv  []byte //iv
 }
 
-func NewAes(key string) *Aes {
+func NewAes(key string, iv string) *Aes {
 	return &Aes{
-		Key: key,
+		Key: []byte(key),
+		Iv:  []byte(iv),
 	}
 }
 
@@ -21,7 +23,7 @@ func NewAes(key string) *Aes {
 // 加密结果为：668C826342B8703D86E8BBF404610499
 // 此时就和 java 结果相对应了，解密也一样对 key 加一步处理就行
 func (s *Aes) AesSha1EncryptECB(src []byte) ([]byte, error) {
-	key, err := AesSha1prng([]byte(s.Key), 128) // 比示例一多出这一步
+	key, err := AesSha1prng(s.Key, 128) // 比示例一多出这一步
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +46,7 @@ func (s *Aes) AesSha1EncryptECB(src []byte) ([]byte, error) {
 }
 
 func (s *Aes) AesSha1DecryptECB(encrypted []byte) ([]byte, error) {
-	key, err := AesSha1prng([]byte(s.Key), 128) // 比示例一多出这一步
+	key, err := AesSha1prng(s.Key, 128) // 比示例一多出这一步
 	if err != nil {
 		return nil, err
 	}
