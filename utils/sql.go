@@ -5,11 +5,11 @@ import (
 )
 
 const (
-	sqlEmptyRegx = `^(%|_)`
+	sqlEmptyRegx = `(%|_)`
 )
 
 // SqlPourConv sql注入转换
 func SqlPourConv(v interface{}) string {
 	reg := regexp.MustCompile(sqlEmptyRegx)
-	return reg.ReplaceAllString(GetString(v), `\${1}\`)
+	return reg.ReplaceAllString(GetString(v), `\${1}`)
 }
