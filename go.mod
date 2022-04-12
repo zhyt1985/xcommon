@@ -13,6 +13,7 @@ require (
 	github.com/nacos-group/nacos-sdk-go v1.1.1
 	github.com/pkg/errors v0.9.1
 	github.com/shopspring/decimal v1.2.0
+	github.com/streadway/amqp v1.0.0
 	github.com/stretchr/testify v1.7.0
 	github.com/zeromicro/go-zero v1.3.0
 	google.golang.org/grpc v1.43.0

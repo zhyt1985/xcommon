@@ -17,6 +17,8 @@ import (
 type NacosConfig struct {
 	// nacos
 	Group string `yaml:"Group"`
+	// 后台管理服务对应的dataId
+	SystemDataId string `yaml:"SystemDataId"`
 	// clent
 	Endpoint    string `yaml:"Endpoint"`
 	NamespaceId string `yaml:"NamespaceId"`
