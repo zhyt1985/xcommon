@@ -3,8 +3,9 @@ package mq
 import (
 	"encoding/json"
 	"errors"
-	"github.com/streadway/amqp"
 	"strings"
+
+	"github.com/streadway/amqp"
 )
 
 var conn *amqp.Connection
@@ -69,7 +70,7 @@ func Ping() (err error) {
 }
 
 // 发布消息
-func Publish(topic string, msg interface{}) (err error) {
+func Publish(topic, node string, msg interface{}) (err error) {
 
 	if topics == "" || !strings.Contains(topics, topic) {
 		//name :交换器的名称
@@ -100,7 +101,7 @@ func Publish(topic string, msg interface{}) (err error) {
 	//如果所有queue都没有消费者，直接把消息返还给生产者，不用将消息入队列等待消费者了。
 
 	mbytes, err := json.Marshal(msg)
-	err = channel.Publish(topic, topic, false, false, amqp.Publishing{
+	err = channel.Publish(topic, node, false, false, amqp.Publishing{
 		ContentType: "text/plain",
 		Body:        mbytes,
 	})
@@ -173,5 +174,3 @@ func Close() {
 	conn.Close()
 	hasMQ = false
 }
-
-

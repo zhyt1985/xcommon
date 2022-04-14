@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 )
+
 func TestMq(t *testing.T) {
 
 	err := SetupRMQ("amqp://wangxinbo:wangxinbo@172.17.31.185:5672/hotmap") // amqp://用户名:密码@地址:端口号/host
@@ -34,14 +35,12 @@ func TestMq(t *testing.T) {
 	fmt.Println("send message")
 
 	for i := 0; i < 10; i++ {
-		err = Publish("first", "当前时间："+time.Now().String())
+		err = Publish("first", "second", "当前时间："+time.Now().String())
 		if err != nil {
 			fmt.Println("err03 : ", err.Error())
 		}
 		time.Sleep(1 * time.Second)
 	}
 	fmt.Println("2 - end")
-
-
 
 }
