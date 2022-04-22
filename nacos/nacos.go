@@ -50,8 +50,7 @@ func GetConfigInfoFromNacos(nacosConfigPaht string, dataId string, destConfigPat
 }
 
 // GetConfigBytesInfoFromNacos 从nacos 获取配置文件信息
-func GetConfigBytesInfoFromNacos(nacosConfigPaht string, dataId string) (nacosBytes []byte, err error) {
-	var nacosCfg NacosConfig
+func GetConfigBytesInfoFromNacos(nacosConfigPaht string, dataId string) (nacosBytes []byte, nacosCfg NacosConfig, err error) {
 	// 获取 nacos 配置文件
 	err = YamlToStruct(nacosConfigPaht, &nacosCfg)
 	if err != nil {
@@ -89,7 +88,7 @@ func GetConfigBytesInfoFromNacos(nacosConfigPaht string, dataId string) (nacosBy
 		fmt.Println(err)
 		return
 	}
-	return []byte(content), nil
+	return []byte(content), nacosCfg, nil
 }
 
 // YamlToStruct   Yaml文件转struct
