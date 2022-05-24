@@ -1,6 +1,12 @@
 package xtime
 
-import "time"
+import (
+	"database/sql/driver"
+	"errors"
+	"fmt"
+	"strings"
+	"time"
+)
 
 const (
 	ANSIC       = "Mon Jan _2 15:04:05 2006"
@@ -98,3 +104,48 @@ func Templeate() *time.Location {
 	local, _ := time.LoadLocation(TimeTeplateDefault)
 	return local
 }
+
+
+//XTime 自定义时间
+type XTime time.Time
+
+func (t *XTime) UnmarshalJSON(data []byte) error {
+	if string(data) == "null" {
+		return nil
+	}
+	var err error
+	//前端接收的时间字符串
+	str := string(data)
+	//去除接收的str收尾多余的"
+	timeStr := strings.Trim(str, "\"")
+	t1, err := time.Parse("2006-01-02 15:04:05", timeStr)
+	*t = XTime(t1)
+	return err
+}
+
+func (t XTime) MarshalJSON() ([]byte, error) {
+	formatted := fmt.Sprintf("\"%v\"", time.Time(t).Format("2006-01-02 15:04:05"))
+	return []byte(formatted), nil
+}
+
+func (t XTime) Value() (driver.Value, error) {
+	// XTime 转换成 time.Time 类型
+	tTime := time.Time(t)
+	return tTime.Format("2006-01-02 15:04:05"), nil
+}
+
+func (t *XTime) Scan(v interface{}) error {
+	switch vt := v.(type) {
+	case time.Time:
+		// 字符串转成 time.Time 类型
+		*t = XTime(vt)
+	default:
+		return errors.New("类型处理错误")
+	}
+	return nil
+}
+
+func (t *XTime) String() string {
+	return fmt.Sprintf("hhh:%s", time.Time(*t).String())
+}
+

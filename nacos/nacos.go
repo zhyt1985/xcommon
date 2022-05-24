@@ -33,7 +33,7 @@ type NacosConfig struct {
 }
 
 // GetConfigInfoFromNacos 从nacos 获取配置文件
-func GetConfigInfoFromNacos(nacosConfigPaht string, dataId string, destConfigPath string) (nacosCfg NacosConfig,err error) {
+func GetConfigInfoFromNacos(nacosConfigPaht string, dataId string, destConfigPath string) (nacosCfg NacosConfig, err error) {
 	// 获取本地配置文件，获取 nacos 地址
 	err = YamlToStruct(nacosConfigPaht, &nacosCfg)
 	if err != nil {
@@ -47,6 +47,48 @@ func GetConfigInfoFromNacos(nacosConfigPaht string, dataId string, destConfigPat
 		return
 	}
 	return
+}
+
+// GetConfigBytesInfoFromNacos 从nacos 获取配置文件信息
+func GetConfigBytesInfoFromNacos(nacosConfigPaht string, dataId string) (nacosBytes []byte, nacosCfg NacosConfig, err error) {
+	// 获取 nacos 配置文件
+	err = YamlToStruct(nacosConfigPaht, &nacosCfg)
+	if err != nil {
+		return
+	}
+	// client
+	clientConfig := constant.ClientConfig{
+		Endpoint:    nacosCfg.Endpoint,
+		NamespaceId: nacosCfg.NamespaceId,
+	}
+	// server
+	serverConfigs := []constant.ServerConfig{{
+		IpAddr:      nacosCfg.NacosServer.IpAddr,
+		ContextPath: nacosCfg.NacosServer.ContextPath,
+		Port:        uint64(nacosCfg.NacosServer.Port),
+		Scheme:      nacosCfg.NacosServer.Scheme,
+	}}
+	// link
+	configClient, err := clients.CreateConfigClient(map[string]interface{}{
+		"clientConfig":  clientConfig,
+		"serverConfigs": serverConfigs,
+	})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	// get configFile
+	content, err := configClient.GetConfig(
+		vo.ConfigParam{
+			DataId: dataId,         // 配置名称
+			Group:  nacosCfg.Group, // 配置分组
+		},
+	)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	return []byte(content), nacosCfg, nil
 }
 
 // YamlToStruct   Yaml文件转struct
