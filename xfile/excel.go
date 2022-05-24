@@ -48,7 +48,7 @@ func ReadExcel(path string) ([][]string, error) {
 	// }
 	// fmt.Println(cell)
 	// Get all the rows in the Sheet1.
-	rows := f.GetRows("Sheet1")
+	rows, err := f.GetRows("Sheet1")
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
