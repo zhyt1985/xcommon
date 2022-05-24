@@ -3,7 +3,7 @@ package xfile
 import (
 	"fmt"
 
-	"github.com/360EntSecGroup-Skylar/excelize"
+	"github.com/xuri/excelize/v2"
 )
 
 func CreateNewExcel(hander []string, records []interface{}, path string) (err error) {
@@ -15,7 +15,7 @@ func CreateNewExcel(hander []string, records []interface{}, path string) (err er
 	// 数据行
 	// data := []interface{}{
 	// 	[]interface{}{1, "张三", 19, "男"},
-	// 	[]interface{}{2, "小丽", 18, "女"}, 
+	// 	[]interface{}{2, "小丽", 18, "女"},
 	// 	[]interface{}{3, "小明", 20, "男"},
 	// }
 	// 遍历写入数据
