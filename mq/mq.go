@@ -106,7 +106,7 @@ func Publish(topic, node string, msg interface{}) (err error) {
 		Body:        mbytes,
 	})
 
-	return nil
+	return err
 }
 
 // 监听接收到的消息
@@ -165,7 +165,7 @@ func Receive(topic, node string, reader func(msg []byte)) (err error) {
 		}
 	}()
 
-	return nil
+	return err
 }
 
 // 关闭连接
