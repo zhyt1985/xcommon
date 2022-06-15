@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	sqlEmptyRegx = `(%|_)`
+	sqlEmptyRegx = `^(%|_)`
 )
 
 // SqlPourConv sql注入转换
