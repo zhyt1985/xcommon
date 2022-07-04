@@ -3,6 +3,8 @@ module git.changjing.com.cn/zhongtai/yijing-common
 go 1.16
 
 require (
+	github.com/360EntSecGroup-Skylar/excelize v1.4.1
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.18
 	github.com/chromedp/cdproto v0.0.0-20220321060548-7bc2623472b3
 	github.com/chromedp/chromedp v0.8.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
