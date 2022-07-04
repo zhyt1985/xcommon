@@ -22,7 +22,7 @@ type FileStat struct {
 /*
 * FileUpload 上传单个文件
  */
-func FileUpload(r *http.Request, name, path string) (*FileStat, error) {
+func FileUpload(r *http.Request, formkey, path, filename string) (*FileStat, error) {
 	var (
 		filePath string
 	)
@@ -31,7 +31,7 @@ func FileUpload(r *http.Request, name, path string) (*FileStat, error) {
 			return nil, err
 		}
 	}
-	file, fh, err := r.FormFile(name)
+	file, fh, err := r.FormFile(formkey)
 	if err != nil {
 		return nil, err
 	}
@@ -40,9 +40,17 @@ func FileUpload(r *http.Request, name, path string) (*FileStat, error) {
 		return nil, errors.New("path not is empty")
 	}
 	if path[len(path)-1] == '/' {
-		filePath = path + fh.Filename
+		if filename == "" {
+			filePath = path + fh.Filename
+		} else {
+			filePath = path + filename
+		}
 	} else {
-		filePath = path + "/" + fh.Filename
+		if filename == "" {
+			filePath = path + "/" + fh.Filename
+		} else {
+			filePath = path + "/" + filename
+		}
 	}
 	// 判断文件夹是否存在，如果不存在，则创建
 	if has := isExists(path); !has {
@@ -69,7 +77,7 @@ func FileUpload(r *http.Request, name, path string) (*FileStat, error) {
 /*
 * 上传多个文件
  */
-func FileUploads(r *http.Request, name, path string) ([]*FileStat, error) {
+func FileUploads(r *http.Request, formkey, path, filename string) ([]*FileStat, error) {
 	var (
 		err  error
 		data []*FileStat
@@ -89,7 +97,7 @@ func FileUploads(r *http.Request, name, path string) ([]*FileStat, error) {
 			return nil, err
 		}
 	}
-	files := r.MultipartForm.File[name]
+	files := r.MultipartForm.File[formkey]
 	for i := 0; i < len(files); i++ {
 		var (
 			filePath string
@@ -101,9 +109,17 @@ func FileUploads(r *http.Request, name, path string) ([]*FileStat, error) {
 		}
 		defer file.Close()
 		if path[len(path)-1] == '/' {
-			filePath = path + fh.Filename
+			if filename == "" {
+				filePath = path + fh.Filename
+			} else {
+				filePath = path + filename
+			}
 		} else {
-			filePath = path + "/" + fh.Filename
+			if filename == "" {
+				filePath = path + "/" + fh.Filename
+			} else {
+				filePath = path + "/" + filename
+			}
 		}
 		newFile, err := os.Create(filePath)
 		if err != nil {

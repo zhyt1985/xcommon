@@ -17,6 +17,7 @@ require (
 	github.com/shopspring/decimal v1.2.0
 	github.com/streadway/amqp v1.0.0
 	github.com/stretchr/testify v1.7.0
+	github.com/xuri/excelize/v2 v2.6.0
 	github.com/zeromicro/go-zero v1.3.0
 	google.golang.org/grpc v1.43.0
 	gopkg.in/yaml.v2 v2.4.0
