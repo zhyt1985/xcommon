@@ -132,6 +132,12 @@ type Email struct{
 }
 ```
 ## excel导入和导出
-## 模拟数据
-## 更多...
-
+1、支持根据结构定义导出顺序
+``` demo
+type Person struct {
+	Name string `json:"name" xlsx:"name:名称,index:2"`
+	Age  int64  `json:"age"  xlsx:"name:年龄,index:1"`
+	Sex  int64  `json:"sex"  xlsx:"-"`
+}
+其中name表示单元格名称 index表示单元格顺序
+```
