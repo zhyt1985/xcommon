@@ -2,7 +2,7 @@
  * @Author: ybg
  * @Date: 2022-07-21 16:23:40
  * @LastEditors: ybg
- * @LastEditTime: 2022-07-22 16:26:57
+ * @LastEditTime: 2022-07-22 16:40:24
  * @Description:
  */
 package xexcel
@@ -52,7 +52,7 @@ func SetPath(path string) Options {
 	}
 }
 
-// 获取头部
+// 生成数据
 func (e *excel) getData(v interface{}) {
 	type d struct {
 		Index int64
@@ -257,18 +257,6 @@ func (e *excel) MergeCell(hCell, vCell string) *excel {
 // CreateExcel 生成excel
 func (e *excel) CreateExcel(v interface{}) {
 	e.getData(v)
-	// f := excelize.NewFile()
-	// index := f.NewSheet("Sheet1")
-	// for _, v := range e.Heads {
-	// 	fmt.Println(v.Cell, v.Value)
-	// 	f.SetCellValue("Sheet1", v.Cell, v.Value)
-	// }
-	// f.SetActiveSheet(index)
-	// // Save spreadsheet by the given path.
-	// if err := f.SaveAs("Book1.xlsx"); err != nil {
-	// 	fmt.Println(err)
-	// }
-	// return
 	f := e.File
 	// Create a new sheet.
 	index := f.NewSheet(e.Sheet)
@@ -278,7 +266,6 @@ func (e *excel) CreateExcel(v interface{}) {
 	}
 	for _, v := range e.Rows {
 		for _, k := range v {
-			fmt.Println("cell", k.Cell, "value", k.Value)
 			f.SetCellValue(e.Sheet, k.Cell, k.Value)
 		}
 	}
