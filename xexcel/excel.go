@@ -2,13 +2,14 @@
  * @Author: ybg
  * @Date: 2022-07-21 16:23:40
  * @LastEditors: ybg
- * @LastEditTime: 2022-07-22 16:26:57
+ * @LastEditTime: 2022-08-04 18:00:13
  * @Description:
  */
 package xexcel
 
 import (
 	"fmt"
+	"os"
 	"reflect"
 	"sort"
 	"strings"
@@ -35,6 +36,7 @@ type exceData struct {
 type excel struct {
 	Sheet string       `json:"sheet"`
 	Path  string       `json:"path"`
+	Name  string       `json:"name"`
 	Heads []exceData   `json:"heads"`
 	Rows  [][]exceData `json:"rows"`
 	Data  interface{}  `json:"data"`
@@ -52,7 +54,14 @@ func SetPath(path string) Options {
 	}
 }
 
-// 获取头部
+// SetPath 设置名称
+func SetName(name string) Options {
+	return func(s *excel) {
+		s.Name = name
+	}
+}
+
+// 生成数据
 func (e *excel) getData(v interface{}) {
 	type d struct {
 		Index int64
@@ -235,8 +244,14 @@ func NewExeclClient(ops ...Options) *excel {
 		o(client)
 	}
 	// 如果地址为空
-	if client.Path == "" {
-		client.Path = fmt.Sprintf("%s.xlsx", utils.GetString(xtime.CurrentTime()))
+	if client.Path != "" {
+		client.Path = fmt.Sprintf("%s/", strings.TrimRight(client.Path, "/"))
+		os.MkdirAll(client.Path, os.ModePerm)
+	} else {
+		client.Path = "./"
+	}
+	if client.Name == "" {
+		client.Name = fmt.Sprintf("%s.xlsx", utils.GetString(xtime.CurrentTime()))
 	}
 	if client.Tag == "" {
 		client.Tag = "xlsx"
@@ -257,18 +272,6 @@ func (e *excel) MergeCell(hCell, vCell string) *excel {
 // CreateExcel 生成excel
 func (e *excel) CreateExcel(v interface{}) {
 	e.getData(v)
-	// f := excelize.NewFile()
-	// index := f.NewSheet("Sheet1")
-	// for _, v := range e.Heads {
-	// 	fmt.Println(v.Cell, v.Value)
-	// 	f.SetCellValue("Sheet1", v.Cell, v.Value)
-	// }
-	// f.SetActiveSheet(index)
-	// // Save spreadsheet by the given path.
-	// if err := f.SaveAs("Book1.xlsx"); err != nil {
-	// 	fmt.Println(err)
-	// }
-	// return
 	f := e.File
 	// Create a new sheet.
 	index := f.NewSheet(e.Sheet)
@@ -278,14 +281,13 @@ func (e *excel) CreateExcel(v interface{}) {
 	}
 	for _, v := range e.Rows {
 		for _, k := range v {
-			fmt.Println("cell", k.Cell, "value", k.Value)
 			f.SetCellValue(e.Sheet, k.Cell, k.Value)
 		}
 	}
 	// Set active sheet of the workbook.
 	f.SetActiveSheet(index)
 	// Save spreadsheet by the given path.
-	if err := f.SaveAs(e.Path); err != nil {
+	if err := f.SaveAs(e.Path + e.Name); err != nil {
 		fmt.Println(err)
 	}
 }

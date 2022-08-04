@@ -2,7 +2,7 @@
  * @Author: ybg
  * @Date: 2022-07-22 16:27:58
  * @LastEditors: ybg
- * @LastEditTime: 2022-07-22 16:29:18
+ * @LastEditTime: 2022-08-04 18:00:31
  * @Description: nc
  */
 package xexcel
@@ -16,7 +16,7 @@ type Person struct {
 }
 
 func TestCreateExcel(t *testing.T) {
-	e := NewExeclClient()
+	e := NewExeclClient(SetPath("./doc/report/"), SetName("123.xlsx"))
 	e.MergeCell("A1", "B1").MergeCell("A2", "B2")
 	//d := Person{Name: "ybg", Age: 20, Sex: 1}
 	d := []Person{{Name: "y", Age: 10, Sex: 1}, {Name: "b", Age: 20, Sex: 1}}
