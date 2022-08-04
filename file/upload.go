@@ -7,6 +7,8 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
+
+	"git.changjing.com.cn/zhongtai/yijing-common/xtime"
 )
 
 const (
@@ -41,7 +43,7 @@ func FileUpload(r *http.Request, formkey, path, filename string) (*FileStat, err
 	}
 	if path[len(path)-1] == '/' {
 		if filename == "" {
-			filePath = path + fh.Filename
+			filePath = path + xtime.TimeParseString(xtime.CurrentTime(), xtime.YYmmdd2) + fh.Filename
 		} else {
 			filePath = path + filename
 		}

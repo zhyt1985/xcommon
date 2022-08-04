@@ -2,13 +2,14 @@
  * @Author: ybg
  * @Date: 2022-07-21 16:23:40
  * @LastEditors: ybg
- * @LastEditTime: 2022-07-22 16:40:24
+ * @LastEditTime: 2022-08-04 18:00:13
  * @Description:
  */
 package xexcel
 
 import (
 	"fmt"
+	"os"
 	"reflect"
 	"sort"
 	"strings"
@@ -35,6 +36,7 @@ type exceData struct {
 type excel struct {
 	Sheet string       `json:"sheet"`
 	Path  string       `json:"path"`
+	Name  string       `json:"name"`
 	Heads []exceData   `json:"heads"`
 	Rows  [][]exceData `json:"rows"`
 	Data  interface{}  `json:"data"`
@@ -49,6 +51,13 @@ type Options func(*excel)
 func SetPath(path string) Options {
 	return func(s *excel) {
 		s.Path = path
+	}
+}
+
+// SetPath 设置名称
+func SetName(name string) Options {
+	return func(s *excel) {
+		s.Name = name
 	}
 }
 
@@ -235,8 +244,14 @@ func NewExeclClient(ops ...Options) *excel {
 		o(client)
 	}
 	// 如果地址为空
-	if client.Path == "" {
-		client.Path = fmt.Sprintf("%s.xlsx", utils.GetString(xtime.CurrentTime()))
+	if client.Path != "" {
+		client.Path = fmt.Sprintf("%s/", strings.TrimRight(client.Path, "/"))
+		os.MkdirAll(client.Path, os.ModePerm)
+	} else {
+		client.Path = "./"
+	}
+	if client.Name == "" {
+		client.Name = fmt.Sprintf("%s.xlsx", utils.GetString(xtime.CurrentTime()))
 	}
 	if client.Tag == "" {
 		client.Tag = "xlsx"
@@ -272,7 +287,7 @@ func (e *excel) CreateExcel(v interface{}) {
 	// Set active sheet of the workbook.
 	f.SetActiveSheet(index)
 	// Save spreadsheet by the given path.
-	if err := f.SaveAs(e.Path); err != nil {
+	if err := f.SaveAs(e.Path + e.Name); err != nil {
 		fmt.Println(err)
 	}
 }
