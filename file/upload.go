@@ -7,8 +7,6 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
-
-	"git.changjing.com.cn/zhongtai/yijing-common/xtime"
 )
 
 const (

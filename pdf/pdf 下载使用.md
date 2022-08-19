@@ -39,7 +39,7 @@ chromedp.WaitVisible(`.title-nav`, chromedp.ByQuery)
 func TestPrintPdf(t *testing.T) {
 	//url string, destPath string, actions []chromedp.Action, params *page.PrintToPDFParams
 	url := "https://www.baidu.com"
-	destPath := "/Users/项目/yijing-common/pdf/baidu.pdf"
+	destPath := "/pdf/baidu.pdf"
 
 	err := DownloadPdf(url, destPath, nil, nil)
 	if err != nil {

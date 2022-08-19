@@ -9,13 +9,13 @@ package xexcel
 
 import (
 	"fmt"
+	"github.com/coolwxb/xcommon/utils"
+	"github.com/coolwxb/xcommon/xtime"
 	"os"
 	"reflect"
 	"sort"
 	"strings"
 
-	"git.changjing.com.cn/zhongtai/yijing-common/utils"
-	"git.changjing.com.cn/zhongtai/yijing-common/xtime"
 	"github.com/xuri/excelize/v2"
 )
 
@@ -235,7 +235,7 @@ func (e *excel) TagSplit(tag string) map[string]interface{} {
 	return m
 }
 
-//  NewExeclClient 初始化excel客户端
+// NewExeclClient 初始化excel客户端
 func NewExeclClient(ops ...Options) *excel {
 	var (
 		client = &excel{}

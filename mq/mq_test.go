@@ -8,7 +8,7 @@ import (
 
 func TestMq(t *testing.T) {
 
-	err := SetupRMQ("amqp://wangxinbo:wangxinbo@172.17.31.185:5672/hotmap") // amqp://用户名:密码@地址:端口号/host
+	err := SetupRMQ("amqp://wangxinbo:wangxinbo@172.17.31.185:5672") // amqp://用户名:密码@地址:端口号/host
 	defer Close()
 	if err != nil {
 		fmt.Println("err01 : ", err.Error())

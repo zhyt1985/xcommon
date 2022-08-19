@@ -2,8 +2,8 @@ package xhttp
 
 import (
 	"fmt"
-	"git.changjing.com.cn/zhongtai/yijing-common/utils"
-	"git.changjing.com.cn/zhongtai/yijing-common/xerr"
+	"github.com/coolwxb/xcommon/utils"
+	"github.com/coolwxb/xcommon/xerr"
 	"net/http"
 
 	"github.com/pkg/errors"
@@ -77,7 +77,7 @@ func HttpFileStream(r *http.Request, w http.ResponseWriter, err error, path stri
 	http.ServeFile(w, r, path)
 }
 
-//http 参数错误返回
+// http 参数错误返回
 func ParamErrorResult(r *http.Request, w http.ResponseWriter, err error) {
 	errMsg := fmt.Sprintf("%s ,%s", xerr.MapErrMsg(xerr.ErrCodeParams), err.Error())
 	httpx.WriteJson(w, http.StatusOK, xerr.ErrParams(errMsg))

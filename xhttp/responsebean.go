@@ -1,6 +1,6 @@
 package xhttp
 
-import "git.changjing.com.cn/zhongtai/yijing-common/xerr"
+import "github.com/coolwxb/xcommon/xerr"
 
 type ResponseSuccessBean struct {
 	Code int         `json:"code"`
